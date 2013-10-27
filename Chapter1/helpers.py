@@ -1,5 +1,6 @@
 import os, sys
 lib_path = os.path.abspath('../lib/ThinkDSP/code/')
+lib_path = os.path.abspath('../lib/ThinkDSP/code/')
 sys.path.append(lib_path)
 
 import thinkdsp
