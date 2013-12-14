@@ -5,7 +5,7 @@ sys.path.append(lib_path)
 import thinkdsp
 import thinkplot
 import example4
-import cpickle
+import pickle
 import matplotlib.pyplot as pyplot
 
 class AudioCompressor():
@@ -50,10 +50,10 @@ class AudioCompressor():
 		return processedDCT
 
 	def inverseDCT(self, amplitudes):
-		return [example4.inverse_dct_iv(amplitude) for amplitude in amplitudes]
+		return [type(example4.inverse_dct_iv(amplitude)) for amplitude in amplitudes]
 
 	def writeToFile(self, amplitudes, outputFileName):
-		cpickle.dump( amplitudes, open( outputFileName, "wb" ) )
+		pickle.dump( amplitudes, open( outputFileName, "wb" ) )
 
 	def readFromFile(self, inputFileName):
 		return cpickle.load( open( inputFileName, "rb" ))
@@ -61,12 +61,13 @@ class AudioCompressor():
 	def combineWindowsToSample(self, windows):
 		return [sample for sample in window for window in windows]
 
-	# def reconstructWave(self, ys, framerate):
-		
+	def getCompressedSignal(self, windowSize, cutoffThreshold=0):
+		windowedSamples = self.getWindowedSamples(windowSize)
+		return self.getDctIV(windowedSamples)
 
 if __name__ == "__main__":
 	audioCompressor = AudioCompressor('samples/violin.wav')
-	windowedSamples = audioCompressor.getWindowedSamples(1)
-	audioCompressor.getDctIV([windowedSamples[0]])
+	compressedSignal = audioCompressor.getCompressedSignal(.001)
+	audioCompressor.writeToFile(compressedSignal, 'compressed.txt')
 
 
